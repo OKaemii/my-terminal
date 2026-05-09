@@ -99,7 +99,7 @@ fn render_block(
             egui::pos2(block_rect.right() - 144.0, block_rect.top() + 4.0),
             egui::vec2(140.0, 24.0),
         );
-        ui.allocate_ui_at_rect(button_area, |ui| {
+        ui.allocate_new_ui(egui::UiBuilder::new().max_rect(button_area), |ui| {
             ui.horizontal(|ui| {
                 // Determine flash colour
                 let flash = flash_states.get(&idx);

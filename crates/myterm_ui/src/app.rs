@@ -15,7 +15,7 @@ use crate::input::{render_input_panel, InputAction};
 use crate::layout::{classify_drop, split_rect, zone_to_split, DropZone, PaneLayout, SplitDir};
 use crate::pane::{PaneId, TerminalPane};
 use crate::palette::render_palette;
-use crate::plugin::{Feature, StatusSegment};
+use crate::plugin::Feature;
 use crate::predict_bar::render_predict_bar;
 use crate::status::render_status_bar;
 use crate::tabs::{render_tab_bar, TabAction, TabDragState};
@@ -430,7 +430,7 @@ impl TerminalApp {
         };
 
         let mut child_ui =
-            ui.child_ui(rect, egui::Layout::top_down(egui::Align::LEFT), None);
+            ui.new_child(egui::UiBuilder::new().max_rect(rect).layout(egui::Layout::top_down(egui::Align::LEFT)));
 
         // Render blocks
         let idx = self.pane_idx(pane_id);

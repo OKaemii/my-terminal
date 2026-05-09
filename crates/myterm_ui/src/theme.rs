@@ -1,6 +1,6 @@
 use egui::Color32;
 use myterm_core::palette;
-use myterm_settings::{AppearanceSettings, Settings, Theme};
+use myterm_settings::{Settings, Theme};
 
 /// Flat `Color32` palette resolved from settings for a single frame.
 pub struct ResolvedPalette {
