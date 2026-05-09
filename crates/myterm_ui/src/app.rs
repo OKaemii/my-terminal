@@ -127,9 +127,15 @@ impl TerminalApp {
 
     // ── PTY processing ────────────────────────────────────────────────────────
 
-    fn process_active_pane(&mut self) {
-        let active = self.active;
-        let idx = self.pane_idx(active);
+    fn process_all_panes(&mut self) {
+        let ids: Vec<PaneId> = self.panes.iter().map(|p| p.id).collect();
+        for pane_id in ids {
+            self.process_pane(pane_id);
+        }
+    }
+
+    fn process_pane(&mut self, pane_id: PaneId) {
+        let idx = self.pane_idx(pane_id);
 
         let mut received = Vec::new();
         while let Ok(bytes) = self.panes[idx].pty.rx.try_recv() {
@@ -153,7 +159,7 @@ impl TerminalApp {
         self.panes[idx].partial_line = buf[start..].to_vec();
 
         for raw in lines {
-            self.handle_raw_line(active, raw);
+            self.handle_raw_line(pane_id, raw);
         }
     }
 
@@ -161,15 +167,16 @@ impl TerminalApp {
         use myterm_pty::{META_MARKER, PROMPT_MARKER};
 
         let raw_str = String::from_utf8_lossy(&raw);
-        let trimmed = raw_str.trim_end_matches('\r');
-        let clean = strip_ansi(trimmed);
+        let clean = strip_ansi(raw_str.trim_end_matches('\r'))
+            .trim()
+            .to_string();
 
         if clean == PROMPT_MARKER {
             self.on_prompt_ready(pane_id);
             return;
         }
         if let Some(meta) = clean.strip_prefix(META_MARKER) {
-            let meta_owned = meta.to_string();
+            let meta_owned = meta.trim().to_string();
             self.on_meta(pane_id, &meta_owned);
             return;
         }
@@ -313,7 +320,7 @@ impl TerminalApp {
 
 impl eframe::App for TerminalApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        self.process_active_pane();
+        self.process_all_panes();
         ctx.request_repaint_after(Duration::from_millis(16));
 
         // Periodic git refresh (outside prompt_ready to handle long-lived sessions)
@@ -483,8 +490,8 @@ impl TerminalApp {
                 font_size,
                 scroll_to_bottom,
                 palette_ref,
-                ctx,
                 &mut blocks_ui,
+                egui::Id::new(("blocks_scroll", pane_id.0)),
             );
         }
 

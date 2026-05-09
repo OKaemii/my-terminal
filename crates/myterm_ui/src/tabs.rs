@@ -47,9 +47,11 @@ pub fn render_tab_bar(
                         .monospace()
                         .size(13.0);
 
-                    let resp = ui.selectable_label(is_active, label);
+                    let resp = ui
+                        .selectable_label(is_active, label)
+                        .interact(egui::Sense::drag());
 
-                    if resp.clicked() {
+                    if resp.clicked() && !resp.dragged() {
                         action = Some(TabAction::Activate(pane_id));
                     }
                     if resp.drag_started() {

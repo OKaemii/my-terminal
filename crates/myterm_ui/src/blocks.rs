@@ -23,15 +23,16 @@ pub fn render_blocks(
     font_size: f32,
     scroll_to_bottom: bool,
     palette: &ResolvedPalette,
-    ctx: &egui::Context,
     ui: &mut egui::Ui,
+    scroll_id: egui::Id,
 ) {
     egui::ScrollArea::vertical()
+        .id_salt(scroll_id)
         .auto_shrink([false, false])
         .stick_to_bottom(scroll_to_bottom)
         .show(ui, |ui| {
             for (idx, block) in blocks.iter().enumerate() {
-                render_block(idx, block, flash_states, font_size, palette, ctx, ui);
+                render_block(idx, block, flash_states, font_size, palette, ui);
                 ui.add_space(4.0);
             }
         });
@@ -43,7 +44,6 @@ fn render_block(
     flash_states: &mut HashMap<usize, BlockFlash>,
     font_size: f32,
     palette: &ResolvedPalette,
-    ctx: &egui::Context,
     ui: &mut egui::Ui,
 ) {
     let resp = Frame::none()
@@ -56,7 +56,6 @@ fn render_block(
 
             // ── header row ────────────────────────────────────────────────
             ui.horizontal(|ui| {
-                // Exit code dot
                 let dot_color = if block.exit_code == 0 {
                     palette.green
                 } else {
@@ -101,9 +100,9 @@ fn render_block(
             egui::pos2(block_rect.right() - 144.0, block_rect.top() + 4.0),
             egui::vec2(140.0, 24.0),
         );
+        let ctx = ui.ctx().clone();
         ui.allocate_new_ui(egui::UiBuilder::new().max_rect(button_area), |ui| {
             ui.horizontal(|ui| {
-                // Determine flash colour
                 let flash = flash_states.get(&idx);
                 let cmd_color = if flash.map(|f| f.kind == "cmd").unwrap_or(false)
                     && flash
@@ -166,7 +165,6 @@ fn render_block(
             });
         });
 
-        // Expire flash states
         flash_states.retain(|_, f| f.at.elapsed().as_millis() < FLASH_DURATION_MS + 50);
     }
 }
