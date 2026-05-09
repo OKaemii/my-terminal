@@ -28,8 +28,14 @@ fn sigs_git_commit_and_config() {
     let sigs = SignatureDb::load();
     let chips = sigs.subcommands("git", "co");
     let labels: Vec<_> = chips.iter().map(|c| c.label.as_str()).collect();
-    assert!(labels.contains(&"commit"), "commit must be in git co completions");
-    assert!(labels.contains(&"config"), "config must be in git co completions");
+    assert!(
+        labels.contains(&"commit"),
+        "commit must be in git co completions"
+    );
+    assert!(
+        labels.contains(&"config"),
+        "config must be in git co completions"
+    );
 }
 
 #[test]

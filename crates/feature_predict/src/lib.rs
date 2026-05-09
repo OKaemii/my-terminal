@@ -60,8 +60,16 @@ pub struct PredictContext {
 pub fn parse(input: &str) -> PredictContext {
     let tokens = shell_tokenize(input);
     match tokens.as_slice() {
-        [] => PredictContext { command: String::new(), partial: String::new(), token_index: 0 },
-        [partial] => PredictContext { command: String::new(), partial: partial.to_string(), token_index: 0 },
+        [] => PredictContext {
+            command: String::new(),
+            partial: String::new(),
+            token_index: 0,
+        },
+        [partial] => PredictContext {
+            command: String::new(),
+            partial: partial.to_string(),
+            token_index: 0,
+        },
         [cmd, .., partial] => PredictContext {
             command: cmd.to_string(),
             partial: partial.to_string(),
@@ -143,7 +151,9 @@ impl SignatureDb {
     }
 
     pub fn subcommands(&self, command: &str, partial: &str) -> Vec<PredictChip> {
-        let Some(sig) = self.commands.get(command) else { return vec![] };
+        let Some(sig) = self.commands.get(command) else {
+            return vec![];
+        };
         sig.subcommands
             .iter()
             .filter(|s| s.name.starts_with(partial))
@@ -165,14 +175,14 @@ impl SignatureDb {
 // ── command index ─────────────────────────────────────────────────────────────
 
 const BUILTINS: &[&str] = &[
-    "echo", "printf", "cd", "pwd", "ls", "cat", "grep", "sed", "awk", "find", "mkdir", "rm",
-    "mv", "cp", "touch", "chmod", "chown", "kill", "jobs", "fg", "bg", "alias", "unalias",
-    "history", "read", "test", "[", "true", "false", "eval", "exec", "source", "export",
+    "echo", "printf", "cd", "pwd", "ls", "cat", "grep", "sed", "awk", "find", "mkdir", "rm", "mv",
+    "cp", "touch", "chmod", "chown", "kill", "jobs", "fg", "bg", "alias", "unalias", "history",
+    "read", "test", "[", "true", "false", "eval", "exec", "source", "export",
 ];
 
 const KEYWORDS: &[&str] = &[
-    "if", "then", "else", "elif", "fi", "for", "while", "do", "done", "case", "esac",
-    "function", "in", "until", "select", "time", "return", "break", "continue",
+    "if", "then", "else", "elif", "fi", "for", "while", "do", "done", "case", "esac", "function",
+    "in", "until", "select", "time", "return", "break", "continue",
 ];
 
 #[derive(Clone)]
@@ -210,7 +220,9 @@ impl CommandIndex {
 
     /// Return names with `prefix`, up to `limit`, sorted by priority.
     pub fn prefix_match(&self, prefix: &str, limit: usize) -> Vec<(String, CommandEntry)> {
-        let Ok(map) = self.commands.read() else { return vec![] };
+        let Ok(map) = self.commands.read() else {
+            return vec![];
+        };
         map.range(prefix.to_string()..)
             .take_while(|(k, _)| k.starts_with(prefix))
             .take(limit)
@@ -225,13 +237,19 @@ fn scan_path() -> BTreeMap<String, CommandEntry> {
     for k in KEYWORDS {
         map.insert(
             k.to_string(),
-            CommandEntry { kind: EntryKind::Keyword, description: None },
+            CommandEntry {
+                kind: EntryKind::Keyword,
+                description: None,
+            },
         );
     }
     for b in BUILTINS {
         map.insert(
             b.to_string(),
-            CommandEntry { kind: EntryKind::Builtin, description: None },
+            CommandEntry {
+                kind: EntryKind::Builtin,
+                description: None,
+            },
         );
     }
 
@@ -298,8 +316,10 @@ fn suggest_commands(
     let mut seen: HashMap<String, i32> = HashMap::new();
 
     // History boost map
-    let history_set: std::collections::HashSet<&str> =
-        history.iter().map(|h| h.split_whitespace().next().unwrap_or("")).collect();
+    let history_set: std::collections::HashSet<&str> = history
+        .iter()
+        .map(|h| h.split_whitespace().next().unwrap_or(""))
+        .collect();
 
     let matches = index.prefix_match(partial, limit * 4);
     let mut candidates: Vec<Candidate> = matches
@@ -310,14 +330,18 @@ fn suggest_commands(
                 EntryKind::Builtin => 20,
                 EntryKind::Executable => 10,
             };
-            let hist = if history_set.contains(name.as_str()) { 20 } else { 0 };
+            let hist = if history_set.contains(name.as_str()) {
+                20
+            } else {
+                0
+            };
             let len_penalty = -(name.len() as i32).min(10);
             let score = base + hist + len_penalty;
             Candidate { name, entry, score }
         })
         .collect();
 
-    candidates.sort_by(|a, b| b.score.cmp(&a.score));
+    candidates.sort_by_key(|b| std::cmp::Reverse(b.score));
     candidates.truncate(limit);
 
     candidates

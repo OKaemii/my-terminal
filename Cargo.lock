@@ -1279,6 +1279,7 @@ dependencies = [
  "feature_git",
  "feature_highlight",
  "feature_jump",
+ "feature_predict",
  "feature_suggest",
  "image",
  "myterm_core",
@@ -1329,14 +1330,22 @@ name = "myterm_ui"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "directories",
  "eframe",
  "egui",
+ "feature_fzf",
+ "feature_git",
+ "feature_highlight",
+ "feature_jump",
+ "feature_predict",
+ "feature_suggest",
  "fuzzy-matcher",
  "myterm_core",
  "myterm_features",
  "myterm_pty",
  "myterm_settings",
  "myterm_vte",
+ "serde_json",
  "vte",
 ]
 

@@ -41,7 +41,11 @@ pub fn render_status_bar(
                 // Feature segments
                 for seg in segments {
                     ui.add_space(8.0);
-                    let color = if seg.accent { palette.cyan } else { palette.dim };
+                    let color = if seg.accent {
+                        palette.cyan
+                    } else {
+                        palette.dim
+                    };
                     ui.colored_label(color, &seg.label);
                 }
 

@@ -6,7 +6,7 @@ pub mod themes;
 
 pub use themes::{ColorScheme, Theme};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(default)]
 pub struct Settings {
     pub appearance: AppearanceSettings,
@@ -42,16 +42,6 @@ pub struct FeatureToggles {
     pub command_not_found: bool,
 }
 
-impl Default for Settings {
-    fn default() -> Self {
-        Self {
-            appearance: AppearanceSettings::default(),
-            font: FontSettings::default(),
-            features: FeatureToggles::default(),
-        }
-    }
-}
-
 impl Default for AppearanceSettings {
     fn default() -> Self {
         Self {
@@ -64,7 +54,10 @@ impl Default for AppearanceSettings {
 
 impl Default for FontSettings {
     fn default() -> Self {
-        Self { size: 14.0, family: "monospace".to_string() }
+        Self {
+            size: 14.0,
+            family: "monospace".to_string(),
+        }
     }
 }
 

@@ -10,7 +10,11 @@ pub struct StyledChar {
 
 impl Default for StyledChar {
     fn default() -> Self {
-        Self { ch: ' ', color: palette::TEXT, bold: false }
+        Self {
+            ch: ' ',
+            color: palette::TEXT,
+            bold: false,
+        }
     }
 }
 

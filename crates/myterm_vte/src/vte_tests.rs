@@ -15,10 +15,13 @@ fn bold_sgr_sets_bold() {
     let lines = p.take_completed();
     assert!(!lines.is_empty());
     let line = &lines[0];
-    assert!(line.iter().all(|sc| sc.ch == ' ' || sc.bold || !sc.bold), "parsed");
+    assert!(!line.is_empty(), "parsed");
     // The 'h','e','l','l','o' chars should be bold
     let bold_chars: Vec<_> = line.iter().filter(|sc| sc.bold).collect();
-    assert!(!bold_chars.is_empty(), "bold chars should exist after SGR 1");
+    assert!(
+        !bold_chars.is_empty(),
+        "bold chars should exist after SGR 1"
+    );
 }
 
 #[test]
@@ -28,8 +31,14 @@ fn green_sgr_sets_green_color() {
     let lines = p.take_completed();
     assert!(!lines.is_empty());
     let line = &lines[0];
-    let green_chars: Vec<_> = line.iter().filter(|sc| sc.color == palette::GREEN).collect();
-    assert!(!green_chars.is_empty(), "green chars should exist after SGR 32");
+    let green_chars: Vec<_> = line
+        .iter()
+        .filter(|sc| sc.color == palette::GREEN)
+        .collect();
+    assert!(
+        !green_chars.is_empty(),
+        "green chars should exist after SGR 32"
+    );
 }
 
 #[test]
@@ -40,7 +49,11 @@ fn bare_ascii_has_default_color_not_bold() {
     assert!(!lines.is_empty());
     let line = &lines[0];
     for sc in line {
-        assert_eq!(sc.color, palette::TEXT, "bare ascii must have default TEXT color");
+        assert_eq!(
+            sc.color,
+            palette::TEXT,
+            "bare ascii must have default TEXT color"
+        );
         assert!(!sc.bold, "bare ascii must not be bold");
     }
 }

@@ -5,18 +5,15 @@ fn id(n: u32) -> PaneId {
     PaneId(n)
 }
 
-// Make PaneId constructible in tests
-impl PaneId {
-    pub(crate) fn raw(n: u32) -> Self { Self(n) }
-}
-
 #[test]
 fn split_leaf_produces_split_node() {
     let a = id(1);
     let b = id(2);
     let layout = PaneLayout::Leaf(a).split(a, b, SplitDir::Horizontal, true);
     match layout {
-        PaneLayout::Split { first, second, dir, .. } => {
+        PaneLayout::Split {
+            first, second, dir, ..
+        } => {
             assert_eq!(dir, SplitDir::Horizontal);
             assert!(matches!(*first, PaneLayout::Leaf(id) if id == a));
             assert!(matches!(*second, PaneLayout::Leaf(id) if id == b));

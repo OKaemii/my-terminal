@@ -1,4 +1,4 @@
-use super::{META_MARKER, PROMPT_MARKER, PtySession};
+use super::{PtySession, META_MARKER, PROMPT_MARKER};
 
 #[test]
 fn bash_init_script_contains_prompt_marker() {
@@ -21,11 +21,17 @@ fn zsh_init_script_contains_meta_marker() {
 #[test]
 fn zsh_init_script_has_precmd_hook() {
     let script = PtySession::init_script("zsh");
-    assert!(script.contains("precmd"), "zsh init script must define precmd hook");
+    assert!(
+        script.contains("precmd"),
+        "zsh init script must define precmd hook"
+    );
 }
 
 #[test]
 fn bash_init_script_has_prompt_command() {
     let script = PtySession::init_script("bash");
-    assert!(script.contains("PROMPT_COMMAND"), "bash init script must set PROMPT_COMMAND");
+    assert!(
+        script.contains("PROMPT_COMMAND"),
+        "bash init script must set PROMPT_COMMAND"
+    );
 }

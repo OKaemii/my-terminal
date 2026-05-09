@@ -1,3 +1,4 @@
+#[derive(Default)]
 pub struct Suggester {
     history: Vec<String>,
 }
@@ -33,12 +34,6 @@ impl Suggester {
 
     pub fn history(&self) -> &[String] {
         &self.history
-    }
-}
-
-impl Default for Suggester {
-    fn default() -> Self {
-        Self { history: Vec::new() }
     }
 }
 

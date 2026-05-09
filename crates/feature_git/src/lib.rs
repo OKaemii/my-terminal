@@ -23,7 +23,9 @@ pub fn get_info(dir: &Path) -> Option<GitInfo> {
         .output()
         .ok()?;
     let branch = if branch_out.status.success() {
-        String::from_utf8_lossy(&branch_out.stdout).trim().to_string()
+        String::from_utf8_lossy(&branch_out.stdout)
+            .trim()
+            .to_string()
     } else {
         let hash = Command::new("git")
             .args(["-C", dir.to_str()?, "rev-parse", "--short", "HEAD"])
@@ -40,7 +42,12 @@ pub fn get_info(dir: &Path) -> Option<GitInfo> {
 
     let (ahead, behind) = get_ahead_behind(dir).unwrap_or((0, 0));
 
-    Some(GitInfo { branch, is_dirty, ahead, behind })
+    Some(GitInfo {
+        branch,
+        is_dirty,
+        ahead,
+        behind,
+    })
 }
 
 fn get_ahead_behind(dir: &Path) -> Option<(u32, u32)> {
@@ -59,7 +66,7 @@ fn get_ahead_behind(dir: &Path) -> Option<(u32, u32)> {
         return None;
     }
     let s = String::from_utf8_lossy(&out.stdout);
-    let mut parts = s.trim().split_whitespace();
+    let mut parts = s.split_whitespace();
     let ahead: u32 = parts.next()?.parse().ok()?;
     let behind: u32 = parts.next()?.parse().ok()?;
     Some((ahead, behind))

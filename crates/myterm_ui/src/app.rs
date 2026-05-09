@@ -13,8 +13,8 @@ use myterm_vte::strip_ansi;
 use crate::blocks::{render_blocks, BlockFlash};
 use crate::input::{render_input_panel, InputAction};
 use crate::layout::{classify_drop, split_rect, zone_to_split, DropZone, PaneLayout, SplitDir};
-use crate::pane::{PaneId, TerminalPane};
 use crate::palette::render_palette;
+use crate::pane::{PaneId, TerminalPane};
 use crate::plugin::Feature;
 use crate::predict_bar::render_predict_bar;
 use crate::status::render_status_bar;
@@ -88,7 +88,10 @@ impl TerminalApp {
     // ── pane helpers ──────────────────────────────────────────────────────────
 
     fn pane_idx(&self, id: PaneId) -> usize {
-        self.panes.iter().position(|p| p.id == id).expect("pane must exist")
+        self.panes
+            .iter()
+            .position(|p| p.id == id)
+            .expect("pane must exist")
     }
 
     fn new_pane(&mut self) -> PaneId {
@@ -107,8 +110,12 @@ impl TerminalApp {
         if let Some(layout) = self.layout.clone().remove(id) {
             self.layout = layout;
             if self.active == id {
-                self.active =
-                    self.layout.pane_ids().into_iter().next().unwrap_or(self.active);
+                self.active = self
+                    .layout
+                    .pane_ids()
+                    .into_iter()
+                    .next()
+                    .unwrap_or(self.active);
             }
         }
         if self.panes.is_empty() {
@@ -171,7 +178,11 @@ impl TerminalApp {
         if !self.panes[idx].startup_done {
             return;
         }
-        let is_running = self.panes[idx].blocks.last().map(|b| b.is_running).unwrap_or(false);
+        let is_running = self.panes[idx]
+            .blocks
+            .last()
+            .map(|b| b.is_running)
+            .unwrap_or(false);
         if !is_running {
             return;
         }
@@ -215,8 +226,11 @@ impl TerminalApp {
             return;
         }
 
-        let last_is_running =
-            self.panes[idx].blocks.last().map(|b| b.is_running).unwrap_or(false);
+        let last_is_running = self.panes[idx]
+            .blocks
+            .last()
+            .map(|b| b.is_running)
+            .unwrap_or(false);
         if last_is_running {
             let remaining = self.panes[idx].vte_proc.take_all();
             let duration_ms = self.panes[idx]
@@ -317,8 +331,7 @@ impl eframe::App for TerminalApp {
         let tab_refs: Vec<(PaneId, &str)> =
             tab_data.iter().map(|(id, t)| (*id, t.as_str())).collect();
 
-        let tab_action =
-            render_tab_bar(&tab_refs, self.active, &mut self.drag, &self.palette, ctx);
+        let tab_action = render_tab_bar(&tab_refs, self.active, &mut self.drag, &self.palette, ctx);
 
         if let Some(action) = tab_action {
             self.handle_tab_action(action);
@@ -357,11 +370,18 @@ impl TerminalApp {
             TabAction::NewTab => {
                 let new_id = self.new_pane();
                 let target = self.active;
-                self.layout =
-                    self.layout.clone().split(target, new_id, SplitDir::Horizontal, true);
+                self.layout = self
+                    .layout
+                    .clone()
+                    .split(target, new_id, SplitDir::Horizontal, true);
                 self.active = new_id;
             }
-            TabAction::Split { target, new, dir, new_is_second } => {
+            TabAction::Split {
+                target,
+                new,
+                dir,
+                new_is_second,
+            } => {
                 self.layout = self.layout.clone().split(target, new, dir, new_is_second);
                 self.active = new;
             }
@@ -382,7 +402,12 @@ impl TerminalApp {
                 let id = *id;
                 self.render_single_pane(id, rect, active == id, ctx, ui);
             }
-            PaneLayout::Split { dir, ratio, first, second } => {
+            PaneLayout::Split {
+                dir,
+                ratio,
+                first,
+                second,
+            } => {
                 let (r1, r2) = split_rect(rect, *dir, *ratio);
                 let first = first.clone();
                 let second = second.clone();
@@ -415,13 +440,7 @@ impl TerminalApp {
             if !input.is_empty() {
                 let ctx_p = feature_predict::parse(&input);
                 let hist = self.suggester.history().to_vec();
-                feature_predict::suggest(
-                    &ctx_p,
-                    &self.predict_index,
-                    &self.predict_sigs,
-                    &hist,
-                    7,
-                )
+                feature_predict::suggest(&ctx_p, &self.predict_index, &self.predict_sigs, &hist, 7)
             } else {
                 vec![]
             }
@@ -429,8 +448,11 @@ impl TerminalApp {
             vec![]
         };
 
-        let mut child_ui =
-            ui.new_child(egui::UiBuilder::new().max_rect(rect).layout(egui::Layout::top_down(egui::Align::LEFT)));
+        let mut child_ui = ui.new_child(
+            egui::UiBuilder::new()
+                .max_rect(rect)
+                .layout(egui::Layout::top_down(egui::Align::LEFT)),
+        );
 
         // Render blocks
         let idx = self.pane_idx(pane_id);
@@ -525,8 +547,10 @@ impl TerminalApp {
             InputAction::NewTab => {
                 let new_id = self.new_pane();
                 let target = self.active;
-                self.layout =
-                    self.layout.clone().split(target, new_id, SplitDir::Horizontal, true);
+                self.layout = self
+                    .layout
+                    .clone()
+                    .split(target, new_id, SplitDir::Horizontal, true);
                 self.active = new_id;
             }
             InputAction::CloseTab => self.close_pane(pane_id),
@@ -545,13 +569,17 @@ impl TerminalApp {
             InputAction::SplitRight => {
                 let new_id = self.new_pane();
                 self.layout =
-                    self.layout.clone().split(pane_id, new_id, SplitDir::Horizontal, true);
+                    self.layout
+                        .clone()
+                        .split(pane_id, new_id, SplitDir::Horizontal, true);
                 self.active = new_id;
             }
             InputAction::SplitBelow => {
                 let new_id = self.new_pane();
-                self.layout =
-                    self.layout.clone().split(pane_id, new_id, SplitDir::Vertical, true);
+                self.layout = self
+                    .layout
+                    .clone()
+                    .split(pane_id, new_id, SplitDir::Vertical, true);
                 self.active = new_id;
             }
         }
@@ -568,13 +596,19 @@ fn render_drop_overlay(ctx: &egui::Context, pane_rect: egui::Rect, active_zone: 
             DropZone::Top,
             egui::Rect::from_min_max(
                 pane_rect.left_top(),
-                egui::pos2(pane_rect.right(), pane_rect.top() + pane_rect.height() * 0.25),
+                egui::pos2(
+                    pane_rect.right(),
+                    pane_rect.top() + pane_rect.height() * 0.25,
+                ),
             ),
         ),
         (
             DropZone::Bottom,
             egui::Rect::from_min_max(
-                egui::pos2(pane_rect.left(), pane_rect.bottom() - pane_rect.height() * 0.25),
+                egui::pos2(
+                    pane_rect.left(),
+                    pane_rect.bottom() - pane_rect.height() * 0.25,
+                ),
                 pane_rect.right_bottom(),
             ),
         ),
@@ -582,13 +616,19 @@ fn render_drop_overlay(ctx: &egui::Context, pane_rect: egui::Rect, active_zone: 
             DropZone::Left,
             egui::Rect::from_min_max(
                 pane_rect.left_top(),
-                egui::pos2(pane_rect.left() + pane_rect.width() * 0.25, pane_rect.bottom()),
+                egui::pos2(
+                    pane_rect.left() + pane_rect.width() * 0.25,
+                    pane_rect.bottom(),
+                ),
             ),
         ),
         (
             DropZone::Right,
             egui::Rect::from_min_max(
-                egui::pos2(pane_rect.right() - pane_rect.width() * 0.25, pane_rect.top()),
+                egui::pos2(
+                    pane_rect.right() - pane_rect.width() * 0.25,
+                    pane_rect.top(),
+                ),
                 pane_rect.right_bottom(),
             ),
         ),

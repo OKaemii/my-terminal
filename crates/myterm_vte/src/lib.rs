@@ -36,7 +36,11 @@ impl OutputProcessor {
     }
 
     fn put_char(&mut self, c: char) {
-        let sc = StyledChar { ch: c, color: self.fg, bold: self.bold };
+        let sc = StyledChar {
+            ch: c,
+            color: self.fg,
+            bold: self.bold,
+        };
         if self.col < self.cur_line.len() {
             self.cur_line[self.col] = sc;
         } else {
@@ -113,16 +117,20 @@ impl Perform for OutputProcessor {
         match byte {
             b'\n' => self.newline(),
             b'\r' => self.col = 0,
-            b'\x08' => {
-                if self.col > 0 {
-                    self.col -= 1;
-                }
+            b'\x08' if self.col > 0 => {
+                self.col -= 1;
             }
             _ => {}
         }
     }
 
-    fn csi_dispatch(&mut self, params: &vte::Params, intermediates: &[u8], _ignore: bool, action: char) {
+    fn csi_dispatch(
+        &mut self,
+        params: &vte::Params,
+        intermediates: &[u8],
+        _ignore: bool,
+        action: char,
+    ) {
         let codes: Vec<u16> = params.iter().flat_map(|g| g.iter().copied()).collect();
         let first = codes.first().copied().unwrap_or(0);
 
@@ -160,12 +168,10 @@ impl Perform for OutputProcessor {
                 }
                 _ => {}
             },
-            'J' => {
-                if first == 2 || first == 3 {
-                    self.completed.clear();
-                    self.cur_line.clear();
-                    self.col = 0;
-                }
+            'J' if first == 2 || first == 3 => {
+                self.completed.clear();
+                self.cur_line.clear();
+                self.col = 0;
             }
             'A' => {
                 let n = first.max(1) as usize;
@@ -189,7 +195,8 @@ impl Perform for OutputProcessor {
     }
 
     fn osc_dispatch(&mut self, _params: &[&[u8]], _bell_terminated: bool) {}
-    fn hook(&mut self, _params: &vte::Params, _intermediates: &[u8], _ignore: bool, _action: char) {}
+    fn hook(&mut self, _params: &vte::Params, _intermediates: &[u8], _ignore: bool, _action: char) {
+    }
     fn put(&mut self, _byte: u8) {}
     fn unhook(&mut self) {}
     fn esc_dispatch(&mut self, _intermediates: &[u8], _ignore: bool, _byte: u8) {}

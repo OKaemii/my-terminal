@@ -31,14 +31,20 @@ fn builtin_cd() {
 #[test]
 fn flag_verbose() {
     let tokens = highlight("echo --verbose");
-    let flag = tokens.iter().find(|(s, _)| s == "--verbose").expect("flag token");
+    let flag = tokens
+        .iter()
+        .find(|(s, _)| s == "--verbose")
+        .expect("flag token");
     assert_eq!(flag.1, HighlightColor::Flag);
 }
 
 #[test]
 fn variable_home() {
     let tokens = highlight("$HOME");
-    let var = tokens.iter().find(|(s, _)| s == "$HOME").expect("var token");
+    let var = tokens
+        .iter()
+        .find(|(s, _)| s == "$HOME")
+        .expect("var token");
     assert_eq!(var.1, HighlightColor::Variable);
 }
 

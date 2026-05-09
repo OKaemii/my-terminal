@@ -70,6 +70,6 @@ pub fn filter(history: &[String], query: &str, matcher: &SkimMatcherV2) -> Vec<S
         .iter()
         .filter_map(|h| matcher.fuzzy_match(h, query).map(|s| (s, h)))
         .collect();
-    scored.sort_by(|a, b| b.0.cmp(&a.0));
+    scored.sort_by_key(|b| std::cmp::Reverse(b.0));
     scored.into_iter().map(|(_, h)| h.clone()).collect()
 }

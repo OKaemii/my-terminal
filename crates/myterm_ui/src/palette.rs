@@ -51,24 +51,26 @@ pub fn render_palette(
             ui.add_space(4.0);
 
             // Results list
-            egui::ScrollArea::vertical().max_height(240.0).show(ui, |ui| {
-                let results = fzf.results.clone();
-                for (i, entry) in results.iter().enumerate() {
-                    let is_sel = i == fzf.selected;
-                    let label = egui::RichText::new(entry)
-                        .monospace()
-                        .size(13.0)
-                        .color(if is_sel { palette.text } else { palette.dim });
-                    let resp = ui.selectable_label(is_sel, label);
-                    if resp.clicked() {
-                        chosen = Some(entry.clone());
-                        fzf.close();
+            egui::ScrollArea::vertical()
+                .max_height(240.0)
+                .show(ui, |ui| {
+                    let results = fzf.results.clone();
+                    for (i, entry) in results.iter().enumerate() {
+                        let is_sel = i == fzf.selected;
+                        let label = egui::RichText::new(entry)
+                            .monospace()
+                            .size(13.0)
+                            .color(if is_sel { palette.text } else { palette.dim });
+                        let resp = ui.selectable_label(is_sel, label);
+                        if resp.clicked() {
+                            chosen = Some(entry.clone());
+                            fzf.close();
+                        }
+                        if is_sel {
+                            resp.scroll_to_me(None);
+                        }
                     }
-                    if is_sel {
-                        resp.scroll_to_me(None);
-                    }
-                }
-            });
+                });
 
             // Keyboard navigation
             ctx.input_mut(|i| {
@@ -103,6 +105,6 @@ pub fn fuzzy_filter(items: &[String], query: &str) -> Vec<String> {
         .iter()
         .filter_map(|h| matcher.fuzzy_match(h, query).map(|s| (s, h)))
         .collect();
-    scored.sort_by(|a, b| b.0.cmp(&a.0));
+    scored.sort_by_key(|b| std::cmp::Reverse(b.0));
     scored.into_iter().map(|(_, h)| h.clone()).collect()
 }

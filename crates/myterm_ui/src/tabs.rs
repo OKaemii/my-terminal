@@ -14,7 +14,12 @@ pub enum TabAction {
     Activate(PaneId),
     Close(PaneId),
     NewTab,
-    Split { target: PaneId, new: PaneId, dir: crate::layout::SplitDir, new_is_second: bool },
+    Split {
+        target: PaneId,
+        new: PaneId,
+        dir: crate::layout::SplitDir,
+        new_is_second: bool,
+    },
     Reorder(PaneId),
 }
 

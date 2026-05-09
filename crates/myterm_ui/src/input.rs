@@ -33,7 +33,11 @@ pub fn render_input_panel(
 
     egui::TopBottomPanel::bottom(egui::Id::new(("input_panel", pane.id)))
         .exact_height(36.0)
-        .frame(Frame::none().fill(palette.input_bg).inner_margin(Margin::symmetric(8.0, 6.0)))
+        .frame(
+            Frame::none()
+                .fill(palette.input_bg)
+                .inner_margin(Margin::symmetric(8.0, 6.0)),
+        )
         .show_inside(ui, |ui| {
             ui.horizontal(|ui| {
                 // Prompt symbol
@@ -74,10 +78,8 @@ pub fn render_input_panel(
             }
         }
         // Enter → submit
-        if i.consume_key(Modifiers::NONE, Key::Enter) {
-            if action.is_none() {
-                action = Some(InputAction::Submit);
-            }
+        if i.consume_key(Modifiers::NONE, Key::Enter) && action.is_none() {
+            action = Some(InputAction::Submit);
         }
         // History navigation
         if i.consume_key(Modifiers::NONE, Key::ArrowUp) {

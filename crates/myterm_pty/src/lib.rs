@@ -17,7 +17,12 @@ pub struct PtySession {
 impl PtySession {
     pub fn spawn(rows: u16, cols: u16) -> Result<Self> {
         let pty_system = native_pty_system();
-        let size = PtySize { rows, cols, pixel_width: 0, pixel_height: 0 };
+        let size = PtySize {
+            rows,
+            cols,
+            pixel_width: 0,
+            pixel_height: 0,
+        };
         let pair = pty_system.openpty(size).context("openpty failed")?;
 
         let shell = std::env::var("SHELL").unwrap_or_else(|_| "/bin/bash".to_string());
@@ -32,11 +37,17 @@ impl PtySession {
         cmd.env("MYTERM", "1");
         cmd.env("COLORTERM", "truecolor");
 
-        let child = pair.slave.spawn_command(cmd).context("spawn shell failed")?;
+        let child = pair
+            .slave
+            .spawn_command(cmd)
+            .context("spawn shell failed")?;
         drop(pair.slave);
 
         let (tx, rx) = mpsc::channel::<Vec<u8>>();
-        let mut reader = pair.master.try_clone_reader().context("clone reader failed")?;
+        let mut reader = pair
+            .master
+            .try_clone_reader()
+            .context("clone reader failed")?;
 
         thread::spawn(move || {
             let mut buf = [0u8; 4096];
@@ -53,7 +64,12 @@ impl PtySession {
         });
 
         let writer = pair.master.take_writer().context("take writer failed")?;
-        let mut session = Self { writer, rx, master: pair.master, _child: child };
+        let mut session = Self {
+            writer,
+            rx,
+            master: pair.master,
+            _child: child,
+        };
 
         let init = Self::init_script(&shell_name);
         session.send_raw(&init)?;
@@ -77,7 +93,7 @@ impl PtySession {
     }
 
     pub fn send_command(&mut self, cmd: &str) -> Result<()> {
-        write!(self.writer, "{cmd}\n")?;
+        writeln!(self.writer, "{cmd}")?;
         self.writer.flush()?;
         Ok(())
     }
@@ -90,7 +106,12 @@ impl PtySession {
 
     pub fn send_resize(&self, rows: u16, cols: u16) -> Result<()> {
         self.master
-            .resize(PtySize { rows, cols, pixel_width: 0, pixel_height: 0 })
+            .resize(PtySize {
+                rows,
+                cols,
+                pixel_width: 0,
+                pixel_height: 0,
+            })
             .context("resize failed")?;
         Ok(())
     }

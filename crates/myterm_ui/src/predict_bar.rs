@@ -44,7 +44,10 @@ pub fn render_predict_bar(
 
                     // Tooltip on hover (no delay; egui handles pointer position)
                     if btn.hovered() {
-                        let layer = egui::LayerId::new(egui::Order::Tooltip, egui::Id::new("predict_tip_layer"));
+                        let layer = egui::LayerId::new(
+                            egui::Order::Tooltip,
+                            egui::Id::new("predict_tip_layer"),
+                        );
                         egui::show_tooltip_at_pointer(
                             ctx,
                             layer,

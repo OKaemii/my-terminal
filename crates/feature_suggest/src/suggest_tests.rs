@@ -9,7 +9,6 @@ fn empty_history_returns_none() {
 #[test]
 fn prefix_match_returns_suffix() {
     let s = Suggester::new(vec!["git commit".to_string(), "git push".to_string()]);
-    assert_eq!(s.suggest("git c"), Some(" commit".to_string()[5..].to_string()));
     // "git c" matches "git commit", suffix = "ommit"
     assert_eq!(s.suggest("git c"), Some("ommit".to_string()));
 }

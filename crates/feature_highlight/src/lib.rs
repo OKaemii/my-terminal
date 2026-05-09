@@ -2,15 +2,15 @@ use egui::Color32;
 use myterm_core::palette;
 
 const KEYWORDS: &[&str] = &[
-    "if", "then", "else", "elif", "fi", "for", "while", "do", "done", "case", "esac",
-    "function", "in", "until", "select", "time", "return", "break", "continue", "exit",
-    "export", "local", "readonly", "declare", "typeset", "unset", "shift", "source", ".",
+    "if", "then", "else", "elif", "fi", "for", "while", "do", "done", "case", "esac", "function",
+    "in", "until", "select", "time", "return", "break", "continue", "exit", "export", "local",
+    "readonly", "declare", "typeset", "unset", "shift", "source", ".",
 ];
 
 const BUILTINS: &[&str] = &[
-    "echo", "printf", "cd", "pwd", "ls", "cat", "grep", "sed", "awk", "find", "mkdir",
-    "rm", "mv", "cp", "touch", "chmod", "chown", "kill", "jobs", "fg", "bg", "alias",
-    "unalias", "history", "read", "test", "[", "true", "false", "eval", "exec",
+    "echo", "printf", "cd", "pwd", "ls", "cat", "grep", "sed", "awk", "find", "mkdir", "rm", "mv",
+    "cp", "touch", "chmod", "chown", "kill", "jobs", "fg", "bg", "alias", "unalias", "history",
+    "read", "test", "[", "true", "false", "eval", "exec",
 ];
 
 /// Semantic colour category — replaces the ratatui `Color` dependency.

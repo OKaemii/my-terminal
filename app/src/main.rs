@@ -9,12 +9,12 @@ fn main() -> Result<()> {
 
     // 2. Initialise feature flags from settings
     myterm_features::init_from_settings(&myterm_features::FeatureToggles {
-        git_status:       settings.features.git_status,
-        autosuggestions:  settings.features.autosuggestions,
+        git_status: settings.features.git_status,
+        autosuggestions: settings.features.autosuggestions,
         syntax_highlight: settings.features.syntax_highlight,
-        jump:             settings.features.jump,
-        predict_bar:      settings.features.predict_bar,
-        fzf_files:        settings.features.fzf_files,
+        jump: settings.features.jump,
+        predict_bar: settings.features.predict_bar,
+        fzf_files: settings.features.fzf_files,
         command_not_found: settings.features.command_not_found,
     });
 
@@ -56,13 +56,14 @@ fn load_icon(mut options: eframe::NativeOptions) -> eframe::NativeOptions {
     if let Ok(img) = image::load_from_memory(icon_bytes) {
         let rgba = img.to_rgba8();
         let (w, h) = rgba.dimensions();
-        options.viewport = options.viewport.with_icon(std::sync::Arc::new(
-            egui::viewport::IconData {
-                rgba: rgba.into_raw(),
-                width: w,
-                height: h,
-            },
-        ));
+        options.viewport =
+            options
+                .viewport
+                .with_icon(std::sync::Arc::new(egui::viewport::IconData {
+                    rgba: rgba.into_raw(),
+                    width: w,
+                    height: h,
+                }));
     }
     options
 }

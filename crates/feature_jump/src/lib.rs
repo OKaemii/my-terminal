@@ -40,7 +40,10 @@ impl JumpDb {
     pub fn add(&mut self, dir: &Path) {
         let key = dir.to_string_lossy().to_string();
         let now = now_secs();
-        let entry = self.entries.entry(key).or_insert(Entry { rank: 0.0, last_visit: now });
+        let entry = self.entries.entry(key).or_insert(Entry {
+            rank: 0.0,
+            last_visit: now,
+        });
         entry.rank += 1.0;
         entry.last_visit = now;
         self.age_entries();
@@ -68,8 +71,11 @@ impl JumpDb {
                     .and_then(|n| n.to_str())
                     .unwrap_or("")
                     .to_lowercase();
-                let end_bonus =
-                    if parts.last().is_some_and(|p| basename.contains(p)) { 2.0 } else { 1.0 };
+                let end_bonus = if parts.last().is_some_and(|p| basename.contains(p)) {
+                    2.0
+                } else {
+                    1.0
+                };
                 let score = entry.rank * end_bonus;
                 if best.map(|(_, s)| score > s).unwrap_or(true) {
                     best = Some((path, score));

@@ -57,8 +57,12 @@ fn render_block(
             // ── header row ────────────────────────────────────────────────
             ui.horizontal(|ui| {
                 // Exit code dot
-                let dot_color = if block.exit_code == 0 { palette.green } else { palette.red };
-                ui.colored_label(dot_color, if block.exit_code == 0 { "●" } else { "●" });
+                let dot_color = if block.exit_code == 0 {
+                    palette.green
+                } else {
+                    palette.red
+                };
+                ui.colored_label(dot_color, "●");
 
                 ui.colored_label(palette.text, &block.command);
 
@@ -66,9 +70,7 @@ fn render_block(
                     if block.duration_ms > 0 {
                         ui.colored_label(palette.dim, format!("{}ms", block.duration_ms));
                     }
-                    let cwd_str = block.cwd.file_name()
-                        .and_then(|n| n.to_str())
-                        .unwrap_or("");
+                    let cwd_str = block.cwd.file_name().and_then(|n| n.to_str()).unwrap_or("");
                     if !cwd_str.is_empty() {
                         ui.colored_label(palette.dim, format!(" {cwd_str}"));
                     }
@@ -104,36 +106,62 @@ fn render_block(
                 // Determine flash colour
                 let flash = flash_states.get(&idx);
                 let cmd_color = if flash.map(|f| f.kind == "cmd").unwrap_or(false)
-                    && flash.map(|f| f.at.elapsed().as_millis() < FLASH_DURATION_MS).unwrap_or(false)
+                    && flash
+                        .map(|f| f.at.elapsed().as_millis() < FLASH_DURATION_MS)
+                        .unwrap_or(false)
                 {
                     palette.green
                 } else {
                     palette.dim
                 };
                 let out_color = if flash.map(|f| f.kind == "out").unwrap_or(false)
-                    && flash.map(|f| f.at.elapsed().as_millis() < FLASH_DURATION_MS).unwrap_or(false)
+                    && flash
+                        .map(|f| f.at.elapsed().as_millis() < FLASH_DURATION_MS)
+                        .unwrap_or(false)
                 {
                     palette.green
                 } else {
                     palette.dim
                 };
 
-                if ui.add(egui::Button::new(
-                    egui::RichText::new("⎘ cmd").color(cmd_color).small()
-                ).frame(false)).clicked() {
+                if ui
+                    .add(
+                        egui::Button::new(egui::RichText::new("⎘ cmd").color(cmd_color).small())
+                            .frame(false),
+                    )
+                    .clicked()
+                {
                     ctx.output_mut(|o| o.copied_text = block.command.clone());
-                    flash_states.insert(idx, BlockFlash { kind: "cmd", at: Instant::now() });
+                    flash_states.insert(
+                        idx,
+                        BlockFlash {
+                            kind: "cmd",
+                            at: Instant::now(),
+                        },
+                    );
                 }
                 ui.add_space(4.0);
-                if ui.add(egui::Button::new(
-                    egui::RichText::new("⎘ out").color(out_color).small()
-                ).frame(false)).clicked() {
-                    let text = block.output.iter()
+                if ui
+                    .add(
+                        egui::Button::new(egui::RichText::new("⎘ out").color(out_color).small())
+                            .frame(false),
+                    )
+                    .clicked()
+                {
+                    let text = block
+                        .output
+                        .iter()
                         .map(|line| line.iter().map(|sc| sc.ch).collect::<String>())
                         .collect::<Vec<_>>()
                         .join("\n");
                     ctx.output_mut(|o| o.copied_text = text);
-                    flash_states.insert(idx, BlockFlash { kind: "out", at: Instant::now() });
+                    flash_states.insert(
+                        idx,
+                        BlockFlash {
+                            kind: "out",
+                            at: Instant::now(),
+                        },
+                    );
                 }
             });
         });

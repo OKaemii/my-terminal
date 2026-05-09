@@ -1,5 +1,5 @@
-use super::*;
 use super::palette;
+use super::*;
 
 #[test]
 fn styled_char_default_is_space() {

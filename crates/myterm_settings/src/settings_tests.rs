@@ -1,5 +1,5 @@
-use super::*;
 use super::themes::{ColorScheme, Theme};
+use super::*;
 
 #[test]
 fn default_settings_round_trip() {
@@ -8,7 +8,10 @@ fn default_settings_round_trip() {
     let restored: Settings = toml::from_str(&toml_str).expect("deserialize");
     assert_eq!(original.font.size, restored.font.size);
     assert_eq!(original.font.family, restored.font.family);
-    assert_eq!(original.appearance.background_opacity, restored.appearance.background_opacity);
+    assert_eq!(
+        original.appearance.background_opacity,
+        restored.appearance.background_opacity
+    );
     assert_eq!(original.features.git_status, restored.features.git_status);
 }
 

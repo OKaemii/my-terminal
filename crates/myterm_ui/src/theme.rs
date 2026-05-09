@@ -28,7 +28,10 @@ impl Default for ResolvedPalette {
 
 impl ResolvedPalette {
     pub fn from_settings(settings: &Settings) -> Self {
-        let theme = settings.appearance.color_scheme.resolve(&settings.appearance.custom_theme);
+        let theme = settings
+            .appearance
+            .color_scheme
+            .resolve(&settings.appearance.custom_theme);
         let opacity = settings.appearance.background_opacity;
         Self::from_settings_theme(&theme, opacity)
     }
