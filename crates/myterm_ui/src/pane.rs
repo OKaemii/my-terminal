@@ -10,7 +10,7 @@ static NEXT_PANE_ID: AtomicU32 = AtomicU32::new(1);
 
 /// Unique identifier for a terminal pane.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
-pub struct PaneId(u32);
+pub struct PaneId(pub(crate) u32);
 
 impl PaneId {
     pub fn next() -> Self {
