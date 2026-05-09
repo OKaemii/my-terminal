@@ -1,0 +1,9 @@
+[package]
+name    = "myterm_pty"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+myterm_core  = { workspace = true }
+anyhow       = { workspace = true }
+portable-pty = { workspace = true }

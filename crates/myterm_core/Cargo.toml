@@ -1,0 +1,7 @@
+[package]
+name    = "myterm_core"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+egui = { workspace = true }

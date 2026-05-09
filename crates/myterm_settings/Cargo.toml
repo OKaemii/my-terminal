@@ -1,0 +1,12 @@
+[package]
+name    = "myterm_settings"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+myterm_core = { workspace = true }
+egui        = { workspace = true }
+anyhow      = { workspace = true }
+serde       = { workspace = true }
+toml        = { workspace = true }
+directories = { workspace = true }

@@ -1,0 +1,25 @@
+[package]
+name    = "myterm"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "myterm"
+path = "src/main.rs"
+
+[dependencies]
+eframe           = { workspace = true }
+egui             = { workspace = true }
+anyhow           = { workspace = true }
+image            = { workspace = true }
+myterm_core      = { workspace = true }
+myterm_pty       = { workspace = true }
+myterm_vte       = { workspace = true }
+myterm_settings  = { workspace = true }
+myterm_features  = { workspace = true }
+myterm_ui        = { workspace = true }
+feature_git       = { workspace = true }
+feature_suggest   = { workspace = true }
+feature_jump      = { workspace = true }
+feature_highlight = { workspace = true }
+feature_fzf       = { workspace = true }

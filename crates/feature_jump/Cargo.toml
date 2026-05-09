@@ -1,0 +1,13 @@
+[package]
+name    = "feature_jump"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+myterm_core     = { workspace = true }
+myterm_features = { workspace = true }
+egui            = { workspace = true }
+anyhow          = { workspace = true }
+serde      = { workspace = true }
+serde_json = { workspace = true }
+directories = { workspace = true }

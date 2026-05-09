@@ -1,0 +1,10 @@
+[package]
+name    = "feature_git"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+myterm_core     = { workspace = true }
+myterm_features = { workspace = true }
+egui            = { workspace = true }
+anyhow          = { workspace = true }

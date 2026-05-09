@@ -1,0 +1,54 @@
+[workspace]
+members = [
+    "app",
+    "crates/myterm_core",
+    "crates/myterm_pty",
+    "crates/myterm_vte",
+    "crates/myterm_settings",
+    "crates/myterm_features",
+    "crates/myterm_ui",
+    "crates/feature_git",
+    "crates/feature_suggest",
+    "crates/feature_jump",
+    "crates/feature_highlight",
+    "crates/feature_fzf",
+    "crates/feature_predict",
+]
+resolver = "2"
+
+[workspace.package]
+version     = "0.1.0"
+edition     = "2021"
+authors     = ["okamii"]
+license     = "MIT"
+publish     = false
+
+[workspace.dependencies]
+# Internal workspace crates
+myterm_core     = { path = "crates/myterm_core" }
+myterm_pty      = { path = "crates/myterm_pty" }
+myterm_vte      = { path = "crates/myterm_vte" }
+myterm_settings = { path = "crates/myterm_settings" }
+myterm_features = { path = "crates/myterm_features" }
+myterm_ui       = { path = "crates/myterm_ui" }
+feature_git       = { path = "crates/feature_git" }
+feature_suggest   = { path = "crates/feature_suggest" }
+feature_jump      = { path = "crates/feature_jump" }
+feature_highlight = { path = "crates/feature_highlight" }
+feature_fzf       = { path = "crates/feature_fzf" }
+feature_predict   = { path = "crates/feature_predict" }
+
+# External dependencies — single version for the whole workspace
+egui          = { version = "0.29", features = [] }
+eframe        = { version = "0.29", default-features = false, features = ["default_fonts", "glow"] }
+anyhow        = "1"
+serde         = { version = "1", features = ["derive"] }
+serde_json    = "1"
+toml          = { version = "0.8", features = ["parse"] }
+directories   = "5"
+portable-pty  = "0.8"
+vte           = "0.13"
+enum-iterator = "2"
+fuzzy-matcher = "0.3"
+which         = "7"
+image         = { version = "0.25", default-features = false, features = ["png"] }

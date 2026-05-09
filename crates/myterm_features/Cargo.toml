@@ -1,0 +1,7 @@
+[package]
+name    = "myterm_features"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+enum-iterator = { workspace = true }
