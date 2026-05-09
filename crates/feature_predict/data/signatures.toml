@@ -1,0 +1,339 @@
+[[command]]
+name = "git"
+description = "Distributed version control system"
+usage = "git <command> [<args>]"
+
+  [[command.subcommands]]
+  name = "add"
+  description = "Stage file contents for the next commit"
+  usage = "git add [options] [--] <pathspec>..."
+
+  [[command.subcommands]]
+  name = "commit"
+  description = "Record changes to the repository"
+  usage = "git commit [-m <msg>] [--amend] [--no-edit]"
+
+  [[command.subcommands]]
+  name = "push"
+  description = "Update remote refs along with associated objects"
+  usage = "git push [<remote>] [<branch>]"
+
+  [[command.subcommands]]
+  name = "pull"
+  description = "Fetch and integrate with another repository or branch"
+  usage = "git pull [<remote>] [<branch>]"
+
+  [[command.subcommands]]
+  name = "fetch"
+  description = "Download objects and refs from another repository"
+  usage = "git fetch [<remote>]"
+
+  [[command.subcommands]]
+  name = "clone"
+  description = "Clone a repository into a new directory"
+  usage = "git clone <repository> [<directory>]"
+
+  [[command.subcommands]]
+  name = "status"
+  description = "Show the working tree status"
+  usage = "git status [-s] [-b]"
+
+  [[command.subcommands]]
+  name = "log"
+  description = "Show commit logs"
+  usage = "git log [--oneline] [-n <number>]"
+
+  [[command.subcommands]]
+  name = "diff"
+  description = "Show changes between commits, commit and working tree, etc."
+  usage = "git diff [<commit>] [--] [<path>...]"
+
+  [[command.subcommands]]
+  name = "branch"
+  description = "List, create, or delete branches"
+  usage = "git branch [<name>] [-d] [-D]"
+
+  [[command.subcommands]]
+  name = "checkout"
+  description = "Switch branches or restore working tree files"
+  usage = "git checkout <branch>"
+
+  [[command.subcommands]]
+  name = "switch"
+  description = "Switch branches"
+  usage = "git switch <branch>"
+
+  [[command.subcommands]]
+  name = "merge"
+  description = "Join two or more development histories together"
+  usage = "git merge <branch>"
+
+  [[command.subcommands]]
+  name = "rebase"
+  description = "Reapply commits on top of another base tip"
+  usage = "git rebase <branch>"
+
+  [[command.subcommands]]
+  name = "reset"
+  description = "Reset current HEAD to the specified state"
+  usage = "git reset [--soft|--mixed|--hard] [<commit>]"
+
+  [[command.subcommands]]
+  name = "stash"
+  description = "Stash the changes in a dirty working directory"
+  usage = "git stash [push|pop|list|drop]"
+
+  [[command.subcommands]]
+  name = "tag"
+  description = "Create, list, delete or verify a tag"
+  usage = "git tag <name> [<commit>]"
+
+  [[command.subcommands]]
+  name = "remote"
+  description = "Manage set of tracked repositories"
+  usage = "git remote [-v] [add|remove] <name> <url>"
+
+  [[command.subcommands]]
+  name = "config"
+  description = "Get and set repository or global options"
+  usage = "git config [--global] <key> [<value>]"
+
+  [[command.subcommands]]
+  name = "show"
+  description = "Show various types of objects"
+  usage = "git show [<object>]"
+
+[[command]]
+name = "cargo"
+description = "Rust package manager"
+usage = "cargo <command> [<args>]"
+
+  [[command.subcommands]]
+  name = "build"
+  description = "Compile the current package"
+  usage = "cargo build [--release] [-p <pkg>]"
+
+  [[command.subcommands]]
+  name = "run"
+  description = "Run the current package"
+  usage = "cargo run [--release] [-- <args>]"
+
+  [[command.subcommands]]
+  name = "test"
+  description = "Run the tests"
+  usage = "cargo test [<filter>] [-- <args>]"
+
+  [[command.subcommands]]
+  name = "check"
+  description = "Check the current package without producing artifacts"
+  usage = "cargo check [--workspace] [-p <pkg>]"
+
+  [[command.subcommands]]
+  name = "clippy"
+  description = "Check for lint warnings"
+  usage = "cargo clippy [--fix] [-- -D warnings]"
+
+  [[command.subcommands]]
+  name = "fmt"
+  description = "Format source code"
+  usage = "cargo fmt [--all] [--check]"
+
+  [[command.subcommands]]
+  name = "add"
+  description = "Add a dependency to a Cargo.toml manifest file"
+  usage = "cargo add <crate>[@<version>]"
+
+  [[command.subcommands]]
+  name = "remove"
+  description = "Remove a dependency from a Cargo.toml manifest file"
+  usage = "cargo remove <crate>"
+
+  [[command.subcommands]]
+  name = "new"
+  description = "Create a new Cargo package"
+  usage = "cargo new [--lib|--bin] <name>"
+
+  [[command.subcommands]]
+  name = "init"
+  description = "Create a new Cargo package in an existing directory"
+  usage = "cargo init [--lib|--bin]"
+
+  [[command.subcommands]]
+  name = "doc"
+  description = "Build this package's and its dependencies' documentation"
+  usage = "cargo doc [--open] [--no-deps]"
+
+  [[command.subcommands]]
+  name = "publish"
+  description = "Upload a package to the registry"
+  usage = "cargo publish [--dry-run]"
+
+  [[command.subcommands]]
+  name = "update"
+  description = "Update dependencies listed in Cargo.lock"
+  usage = "cargo update [-p <pkg>]"
+
+  [[command.subcommands]]
+  name = "tree"
+  description = "Display a tree visualization of a dependency graph"
+  usage = "cargo tree [-p <pkg>] [--depth <n>]"
+
+[[command]]
+name = "docker"
+description = "Docker container management"
+usage = "docker <command> [<args>]"
+
+  [[command.subcommands]]
+  name = "build"
+  description = "Build an image from a Dockerfile"
+  usage = "docker build [-t <name>] <path>"
+
+  [[command.subcommands]]
+  name = "run"
+  description = "Create and run a new container from an image"
+  usage = "docker run [-it] [--rm] <image> [<cmd>]"
+
+  [[command.subcommands]]
+  name = "ps"
+  description = "List containers"
+  usage = "docker ps [-a]"
+
+  [[command.subcommands]]
+  name = "images"
+  description = "List images"
+  usage = "docker images"
+
+  [[command.subcommands]]
+  name = "pull"
+  description = "Download an image from a registry"
+  usage = "docker pull <image>"
+
+  [[command.subcommands]]
+  name = "push"
+  description = "Upload an image to a registry"
+  usage = "docker push <image>"
+
+  [[command.subcommands]]
+  name = "stop"
+  description = "Stop one or more running containers"
+  usage = "docker stop <container>"
+
+  [[command.subcommands]]
+  name = "rm"
+  description = "Remove one or more containers"
+  usage = "docker rm <container>"
+
+  [[command.subcommands]]
+  name = "exec"
+  description = "Execute a command in a running container"
+  usage = "docker exec [-it] <container> <cmd>"
+
+  [[command.subcommands]]
+  name = "logs"
+  description = "Fetch the logs of a container"
+  usage = "docker logs [-f] <container>"
+
+[[command]]
+name = "npm"
+description = "Node package manager"
+usage = "npm <command> [<args>]"
+
+  [[command.subcommands]]
+  name = "install"
+  description = "Install a package"
+  usage = "npm install [<pkg>] [--save-dev]"
+
+  [[command.subcommands]]
+  name = "run"
+  description = "Run a script defined in package.json"
+  usage = "npm run <script>"
+
+  [[command.subcommands]]
+  name = "test"
+  description = "Run the test script"
+  usage = "npm test"
+
+  [[command.subcommands]]
+  name = "build"
+  description = "Run the build script"
+  usage = "npm run build"
+
+  [[command.subcommands]]
+  name = "start"
+  description = "Run the start script"
+  usage = "npm start"
+
+[[command]]
+name = "ssh"
+description = "OpenSSH remote login client"
+usage = "ssh [options] [user@]hostname [command]"
+
+[[command]]
+name = "curl"
+description = "Transfer data from or to a server"
+usage = "curl [options] <url>"
+
+[[command]]
+name = "make"
+description = "Build automation tool"
+usage = "make [target] [VAR=value]"
+
+[[command]]
+name = "tar"
+description = "Archive utility"
+usage = "tar [-cxzf] <archive> [files]"
+
+[[command]]
+name = "grep"
+description = "Print lines that match patterns"
+usage = "grep [options] <pattern> [file...]"
+
+[[command]]
+name = "find"
+description = "Search for files in a directory hierarchy"
+usage = "find <path> [expression]"
+
+[[command]]
+name = "sed"
+description = "Stream editor for filtering and transforming text"
+usage = "sed [options] <script> [file]"
+
+[[command]]
+name = "awk"
+description = "Pattern scanning and processing language"
+usage = "awk [options] <program> [file]"
+
+[[command]]
+name = "systemctl"
+description = "Control the systemd system and service manager"
+usage = "systemctl <command> [unit]"
+
+  [[command.subcommands]]
+  name = "start"
+  description = "Start (activate) one or more units"
+  usage = "systemctl start <unit>"
+
+  [[command.subcommands]]
+  name = "stop"
+  description = "Stop (deactivate) one or more units"
+  usage = "systemctl stop <unit>"
+
+  [[command.subcommands]]
+  name = "status"
+  description = "Show runtime status of one or more units"
+  usage = "systemctl status <unit>"
+
+  [[command.subcommands]]
+  name = "enable"
+  description = "Enable one or more units"
+  usage = "systemctl enable <unit>"
+
+  [[command.subcommands]]
+  name = "disable"
+  description = "Disable one or more units"
+  usage = "systemctl disable <unit>"
+
+  [[command.subcommands]]
+  name = "restart"
+  description = "Restart one or more units"
+  usage = "systemctl restart <unit>"
