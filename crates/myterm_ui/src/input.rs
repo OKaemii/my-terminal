@@ -45,13 +45,14 @@ pub fn render_input_panel(
                 let text_edit_resp = ui.add_sized(
                     [ui.available_width(), 22.0],
                     egui::TextEdit::singleline(&mut pane.input)
+                        .id(egui::Id::new(("input_text", pane.id)))
                         .font(egui::FontId::monospace(font_size))
                         .text_color(palette.text)
                         .frame(false)
                         .desired_width(f32::INFINITY),
                 );
 
-                if request_focus {
+                if request_focus && !text_edit_resp.has_focus() {
                     text_edit_resp.request_focus();
                 }
 
