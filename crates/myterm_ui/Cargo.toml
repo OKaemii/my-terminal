@@ -1,0 +1,16 @@
+[package]
+name    = "myterm_ui"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+myterm_core     = { workspace = true }
+myterm_pty      = { workspace = true }
+myterm_vte      = { workspace = true }
+myterm_settings = { workspace = true }
+myterm_features = { workspace = true }
+egui            = { workspace = true }
+eframe          = { workspace = true }
+anyhow          = { workspace = true }
+fuzzy-matcher   = { workspace = true }
+vte             = { workspace = true }
