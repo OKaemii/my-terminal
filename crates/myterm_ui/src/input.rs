@@ -23,6 +23,7 @@ pub fn render_input_panel(
     suggester: &Suggester,
     palette: &ResolvedPalette,
     font_size: f32,
+    request_focus: bool,
     ctx: &egui::Context,
     ui: &mut egui::Ui,
 ) -> Option<InputAction> {
@@ -31,14 +32,11 @@ pub fn render_input_panel(
     // Update suggestion from history
     pane.suggestion = suggester.suggest(&pane.input);
 
-    egui::TopBottomPanel::bottom(egui::Id::new(("input_panel", pane.id)))
-        .exact_height(36.0)
-        .frame(
-            Frame::none()
-                .fill(palette.input_bg)
-                .inner_margin(Margin::symmetric(8.0, 6.0)),
-        )
-        .show_inside(ui, |ui| {
+    Frame::none()
+        .fill(palette.input_bg)
+        .inner_margin(Margin::symmetric(8.0, 6.0))
+        .show(ui, |ui| {
+            ui.set_min_size(ui.available_size());
             ui.horizontal(|ui| {
                 // Prompt symbol
                 ui.colored_label(palette.green, "❯");
@@ -53,14 +51,8 @@ pub fn render_input_panel(
                         .desired_width(f32::INFINITY),
                 );
 
-                // Ghost autosuggestion overlay (dim text after cursor)
-                if let Some(ref sug) = pane.suggestion {
-                    if !sug.is_empty() {
-                        let ghost = format!("{}{}", pane.input, sug);
-                        // We can't easily overlay egui TextEdit; paint ghost as a label beside it
-                        // A proper overlay would require custom painter; this approximation suffices.
-                        let _ = ghost; // rendered via the suggest bar instead
-                    }
+                if request_focus {
+                    text_edit_resp.request_focus();
                 }
 
                 if text_edit_resp.lost_focus() && ctx.input(|i| i.key_pressed(Key::Enter)) {

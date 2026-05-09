@@ -16,14 +16,11 @@ pub fn render_predict_bar(
         return;
     }
 
-    egui::TopBottomPanel::bottom(egui::Id::new("predict_bar"))
-        .exact_height(28.0)
-        .frame(
-            Frame::none()
-                .fill(palette.status_bg)
-                .inner_margin(Margin::symmetric(8.0, 3.0)),
-        )
-        .show_inside(ui, |ui| {
+    Frame::none()
+        .fill(palette.status_bg)
+        .inner_margin(Margin::symmetric(8.0, 3.0))
+        .show(ui, |ui| {
+            ui.set_min_size(ui.available_size());
             ui.horizontal(|ui| {
                 for chip in chips.iter().take(7) {
                     let color = chip_color(chip.kind, palette);

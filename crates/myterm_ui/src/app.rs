@@ -426,7 +426,6 @@ impl TerminalApp {
         ui: &mut egui::Ui,
     ) {
         let font_size = self.settings.font.size;
-        let active = self.active;
 
         // Click to activate pane
         if ui.rect_contains_pointer(rect) && ctx.input(|i| i.pointer.primary_clicked()) {
@@ -448,52 +447,80 @@ impl TerminalApp {
             vec![]
         };
 
-        let mut child_ui = ui.new_child(
-            egui::UiBuilder::new()
-                .max_rect(rect)
-                .layout(egui::Layout::top_down(egui::Align::LEFT)),
+        // Manually partition the rect so we don't use TopBottomPanel inside a child UI
+        let input_h = 36.0;
+        let idx = self.pane_idx(pane_id);
+        let has_predict = !predict_chips.is_empty() && !self.panes[idx].input.is_empty();
+        let predict_h = if has_predict { 28.0 } else { 0.0 };
+        let bottom_h = input_h + predict_h;
+
+        let blocks_rect = egui::Rect::from_min_max(
+            rect.min,
+            egui::pos2(rect.max.x, (rect.max.y - bottom_h).max(rect.min.y)),
         );
+        let predict_rect = egui::Rect::from_min_max(
+            egui::pos2(rect.min.x, rect.max.y - bottom_h),
+            egui::pos2(rect.max.x, rect.max.y - input_h),
+        );
+        let input_rect =
+            egui::Rect::from_min_max(egui::pos2(rect.min.x, rect.max.y - input_h), rect.max);
+
+        // SAFETY: palette is not mutated during render calls
+        let palette_ref = unsafe { &*(&self.palette as *const ResolvedPalette) };
 
         // Render blocks
-        let idx = self.pane_idx(pane_id);
         let scroll_to_bottom = self.panes[idx].scroll_to_bottom;
         self.panes[idx].scroll_to_bottom = false;
-
-        // Extract what we need to avoid multiple borrows
-        let palette = &self.palette as *const ResolvedPalette;
-        // SAFETY: palette is not mutated during render calls
-        let palette_ref = unsafe { &*palette };
-
-        render_blocks(
-            &self.panes[idx].blocks,
-            &mut self.flash_states,
-            font_size,
-            scroll_to_bottom,
-            palette_ref,
-            ctx,
-            &mut child_ui,
-        );
+        {
+            let mut blocks_ui = ui.new_child(
+                egui::UiBuilder::new()
+                    .max_rect(blocks_rect)
+                    .layout(egui::Layout::top_down(egui::Align::LEFT)),
+            );
+            render_blocks(
+                &self.panes[idx].blocks,
+                &mut self.flash_states,
+                font_size,
+                scroll_to_bottom,
+                palette_ref,
+                ctx,
+                &mut blocks_ui,
+            );
+        }
 
         // Render predict bar
-        let idx = self.pane_idx(pane_id);
-        render_predict_bar(
-            &predict_chips,
-            &mut self.panes[idx].input,
-            palette_ref,
-            ctx,
-            &mut child_ui,
-        );
+        if has_predict {
+            let idx = self.pane_idx(pane_id);
+            let mut predict_ui = ui.new_child(
+                egui::UiBuilder::new()
+                    .max_rect(predict_rect)
+                    .layout(egui::Layout::top_down(egui::Align::LEFT)),
+            );
+            render_predict_bar(
+                &predict_chips,
+                &mut self.panes[idx].input,
+                palette_ref,
+                ctx,
+                &mut predict_ui,
+            );
+        }
 
         // Render input panel (active pane only)
         let input_action = if is_active {
             let idx = self.pane_idx(pane_id);
+            let mut input_ui = ui.new_child(
+                egui::UiBuilder::new()
+                    .max_rect(input_rect)
+                    .layout(egui::Layout::top_down(egui::Align::LEFT)),
+            );
             render_input_panel(
                 &mut self.panes[idx],
                 &self.suggester,
                 palette_ref,
                 font_size,
+                !self.fzf.open,
                 ctx,
-                &mut child_ui,
+                &mut input_ui,
             )
         } else {
             None
@@ -533,8 +560,6 @@ impl TerminalApp {
                 }
             }
         }
-
-        let _ = active; // suppress unused warning
     }
 
     fn handle_input_action(&mut self, pane_id: PaneId, action: InputAction) {
